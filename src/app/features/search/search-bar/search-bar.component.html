@@ -1,0 +1,11 @@
+<form class="search" (submit)="$event.preventDefault(); submit()">
+  <span aria-hidden="true">⌕</span>
+  <input
+    [formControl]="searchInput"
+    type="search"
+    placeholder="Rechercher une ville… (ex. Rennes)"
+    minlength="3"
+    aria-label="Nom de la ville"
+  />
+  <button [disabled]="submitIsDisabled"  type="submit">Explorer <span>↗</span></button>
+</form>

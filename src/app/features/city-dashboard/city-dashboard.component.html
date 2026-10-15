@@ -1,0 +1,92 @@
+@if (status() === 'idle') {
+  <section class="empty">
+    <div class="orb">⌁</div>
+    <h2>Ton terrain de jeu RxJS</h2>
+    <p>
+      Commence par rechercher une ville. Ensuite, implémente le pipeline dans
+      <code>city-explorer.facade.ts</code>.
+    </p>
+    <div class="steps">
+      <span><b>01</b> Géocoder</span><span><b>02</b> Paralléliser</span
+      ><span><b>03</b> Composer</span>
+    </div>
+  </section>
+}
+@if (status() === 'loading') {
+  <section class="empty">
+    <div class="loader"></div>
+    <h2>Construction de la fiche…</h2>
+    <p>Quand ton pipeline sera branché, les appels partiront ici.</p>
+  </section>
+}
+@if (status() === 'not-found') {
+  <section class="empty">
+    <div class="orb">?</div>
+    <h2>Aucune ville trouvée</h2>
+    <p>
+      Aucun résultat ne correspond à ta recherche. Essaie avec un autre nom de
+      ville.
+    </p>
+  </section>
+}
+@if (status() === 'error') {
+  <section class="empty">
+    <h2>Impossible de charger cette ville</h2>
+    <p>
+      Ajoute un <code>catchError</code> dans la façade pour gérer ce cas
+      proprement.
+    </p>
+  </section>
+}
+@if (status() === 'ready' && viewModel(); as vm) {
+  <section class="dashboard">
+    <div class="city-heading">
+      <div>
+        <div class="eyebrow">Résultat</div>
+        <h2>
+          {{ vm.city.name }} <span>{{ vm.country.flag }}</span>
+        </h2>
+        <p>
+          {{ vm.city.admin1 ? vm.city.admin1 + ', ' : '' }}{{ vm.city.country }}
+        </p>
+      </div>
+      <div class="temperature">
+        {{ vm.weather.current.temperature | number: '1.0-0' }}°
+      </div>
+    </div>
+    <div class="cards">
+      <article>
+        <small>Météo actuelle</small
+        ><strong
+          >{{ vm.weather.current.temperature | number: '1.0-0' }}°C</strong
+        >
+        <p>Vent {{ vm.weather.current.windSpeed | number: '1.0-0' }} km/h</p>
+      </article>
+      <article>
+        <small>Qualité de l’air</small
+        ><strong
+          >{{ vm.airQuality.pm25 | number: '1.0-0' }} <i>µg/m³</i></strong
+        >
+        <strong>{{ vm.airQuality.europeanIndex | number: '1.0-0' }}</strong>
+        <p>De 0 (pas de pollution) à 500 (très pollué)</p>
+      </article>
+      <article>
+        <small>Pays</small
+        ><strong>{{ vm.country.currencies.join(', ') }}</strong>
+        <p>{{ vm.country.languages.join(', ') }}</p>
+      </article>
+    </div>
+    <div class="forecast">
+      <h3>Prévisions</h3>
+      <div class="forecast-grid">
+        @for (day of vm.weather.daily; track day.date) {
+          <div>
+            <small>{{ day.date | date: 'EEE' }}</small
+            ><b>{{ day.max | number: '1.0-0' }}°</b
+            ><span>{{ day.min | number: '1.0-0' }}°</span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+}
